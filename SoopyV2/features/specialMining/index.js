@@ -222,7 +222,7 @@ class PowderAndScatha extends Feature {
                 this.dPowder = Date.now() + 15 * 1000 * 60
             } else this.dPowder = 0
         })
-        this.registerChat("&r&6You have successfully picked the lock on this chest!&r", (e) => {
+        this.registerChat("&r&aYou uncovered a treasure chest!&r", (e) => {
             this.miningData.powder.chests++
             delay(100, () => {
                 this.expRateInfo.push([Date.now(), this.miningData.powder.mithril, this.miningData.powder.gemstone, this.miningData.powder.chests])

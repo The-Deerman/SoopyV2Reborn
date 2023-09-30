@@ -41,6 +41,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: SoopyV2.zip
+        tag_name: ${{ github.event.inputs.tag_name }}
       env:
         GITHUB_TOKEN: ${{ secrets.YOUR_SECRET_NAME }}
 

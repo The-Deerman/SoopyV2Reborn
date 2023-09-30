@@ -573,7 +573,7 @@ cpsText+=CPS.getRightClicksAverage();
 this.cpsElement.setText("&6Cps&7> &f"+cpsText);
 
 
-if(this.scanGuiForPet.getValue()&&Player&&Player.getContainer()&&Player.getContainer().getName().includes(") Pets")){
+if(this.scanGuiForPet.getValue()&&Player&&Player.getContainer()&&Player.getContainer().getName().includes("Pets (")){
 let inv=Player.getContainer().getItems();
 for(let i=0;i<inv.length;i++){
 if(inv[i]!=null&&inv[i].getName().includes("[Lvl ")){

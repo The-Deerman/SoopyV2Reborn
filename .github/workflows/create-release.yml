@@ -8,7 +8,7 @@ on:
         required: true
       release_trigger:
         description: 'Trigger the release workflow'
-        required: true
+        required: false
 
 jobs:
   build:
@@ -24,6 +24,11 @@ jobs:
         # Example: zip -r SoopyV2.zip SoopyV2
         # You can use 'find' or other commands to specify the files and folders to include.
         zip -r SoopyV2.zip SoopyV2
+
+    - name: Configure Git Identity
+      run: |
+        git config --global user.email "113066400+The-Deerman@users.noreply.github.com"
+        git config --global user.name "The_Deerman"
 
     - name: Create Git Tag
       run: |

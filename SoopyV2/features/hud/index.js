@@ -998,10 +998,10 @@ class:new Hud};
 
 
 
-const rainingTime=1000*1000;
-const rainInterval=4850*1000;
-const thunderstormInterval=rainInterval*4;
-const PrevThunderstormTime=1668551956000;
+const rainingTime=1200*1000;
+const rainInterval=3600*1000;
+const thunderstormInterval=rainInterval*3;
+const PrevThunderstormTime=1695495301000;
 
 function rainTimer(){
 let timeSinceThunderStart=(Date.now()-PrevThunderstormTime)%thunderstormInterval;

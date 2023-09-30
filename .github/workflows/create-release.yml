@@ -3,6 +3,9 @@ name: Create Release
 on:
   workflow_dispatch:
     inputs:
+      tag_name:
+        description: 'Tag name for the release'
+        required: true
       release_trigger:
         description: 'Trigger the release workflow'
         required: true
@@ -18,9 +21,14 @@ jobs:
     - name: Zip Files/Folders
       run: |
         # Zip your files/folders here
-        # Example: zip -r my-release.zip folder1 folder2 file1.txt
+        # Example: zip -r SoopyV2.zip SoopyV2
         # You can use 'find' or other commands to specify the files and folders to include.
         zip -r SoopyV2.zip SoopyV2
+
+    - name: Create Git Tag
+      run: |
+        git tag -a ${{ github.event.inputs.tag_name }} -m "Version ${{ github.event.inputs.tag_name }}"
+        git push origin ${{ github.event.inputs.tag_name }}
 
     - name: Create Release
       id: create_release
@@ -29,3 +37,4 @@ jobs:
         files: SoopyV2.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

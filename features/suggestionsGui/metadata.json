@@ -1,0 +1,8 @@
+{
+    "name": "Suggestions gui",
+    "description": "Gui for voting on SoopyV2 suggestions",
+    "isHidden": true,
+    "isTogglable": false,
+    "defaultEnabled": true,
+    "sortA": 0
+}

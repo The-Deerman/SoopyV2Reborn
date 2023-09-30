@@ -1,0 +1,8 @@
+{
+    "name": "Nether",
+    "description": "uga booga nether",
+    "isHidden": false,
+    "isTogglable": true,
+    "defaultEnabled": true,
+    "sortA": 1
+}

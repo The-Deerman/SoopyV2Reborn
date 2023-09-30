@@ -1,0 +1,31 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_trigger:
+        description: 'Trigger the release workflow'
+        required: true
+
+jobs:
+  build:
+    runs-on: chattriggers
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Zip Files/Folders
+      run: |
+        # Zip your files/folders here
+        # Example: zip -r my-release.zip folder1 folder2 file1.txt
+        # You can use 'find' or other commands to specify the files and folders to include.
+        zip -r SoopyV2.zip SoopyV2
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: SoopyV2.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

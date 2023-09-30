@@ -42,7 +42,7 @@ this.lastPings=[undefined,undefined,undefined];
 this.ping=0;
 this.pingI=0;
 
-this.registerChat("&rUnknown command. Type \"/help\" for help.&r",(e)=>{
+this.registerChat("&rUnknown command. Type \"/help\" for help. ('uhfdsolguhkjdjfhgkjhdfdlgkjhldkjhlkjhsldkjfhldshkjf')&r",(e)=>{
 if(this.checkingPing){
 this.lastPings[this.pingI%3]=Date.now()-this.lastPingCheck;
 cancel(e);

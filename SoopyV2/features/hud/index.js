@@ -348,7 +348,7 @@ this.petText="&6Pet&7> &cNone";
 
 this.lastSwappedPet=Date.now();
 });
-this.registerChat("&r&aYour &r${pet} &r&alevelled up to level &r&9${level}&r&a!&r",(pet,level)=>{
+this.registerChat("&r&aYour &r${pet} &r&aleveled up to level &r&9${level}&r&a!&r",(pet,level)=>{
 if(ChatLib.removeFormatting(this.petText.split("] ")[1].trim())===ChatLib.removeFormatting(pet.trim())){
 this.petElement.setText("&6Pet&7> &7[Lvl "+(level||"??")+"] "+pet);
 this.petText="&6Pet&7> &7[Lvl "+(level||"??")+"] "+pet;

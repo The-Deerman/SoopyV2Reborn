@@ -80,7 +80,7 @@ if(this.showFriendMessages.getValue()&&msg.includes("&aFriend"))return;
 if(this.showGuildMessages.getValue()&&msg.includes("&2Guild"))return;
 
 
-if(this.showPetLevelUpMessage.getValue()&&msg.includes("&alevelled up"))return;
+if(this.showPetLevelUpMessage.getValue()&&msg.includes("&aleveled up"))return;
 
 
 

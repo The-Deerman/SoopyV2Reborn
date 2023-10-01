@@ -34,7 +34,8 @@ this.showGuildMessages=new ToggleSetting("Show guild message","should it show gu
 this.showPetLevelUpMessage=new ToggleSetting("Show pet level message","should it show pet level up message",false,"spam_text_pet_level",this);
 this.removeBlocksInTheWay=new ToggleSetting("Remove limited tp msg","completely erases 'There are blocks in the way!' message from gui",false,"limited_tp_msg",this);
 this.showAutoPetRule=new ToggleSetting("Show autopet rule","Should it show autopet rule messages",false,"autopet_msg",this);
-
+this.HideUnkownMessages=new ToggleSetting("Hide 'Unkown Command' messages","useful if you want to keep blood helper and dojo helpers enabled",true,"Unkown_command",this)
+  
 this.SpamHiderMessagesRenderer=new SpamHiderMessagesRenderer;
 this.textShadowSetting.toggleObject.addEvent(new SoopyContentChangeEvent().setHandler((newVal,oldVal,resetFun)=>{
 this.SpamHiderMessagesRenderer.textShadow=this.textShadowSetting.getValue();
@@ -82,8 +83,12 @@ if(this.showGuildMessages.getValue()&&msg.includes("&2Guild"))return;
 
 if(this.showPetLevelUpMessage.getValue()&&msg.includes("&alevelled up"))return;
 
+if(this.HideUnkownMessages.getValue()&&msg.includes("Unknown command.")){
+cancel(e);
+return;
+}
 
-
+  
 if(this.removeBlocksInTheWay.getValue()&&msg.includes("There are blocks in the way!")){
 cancel(e);
 return;

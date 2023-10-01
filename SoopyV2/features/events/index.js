@@ -17,6 +17,7 @@ let warpData={
 "castle":[-250,130,45],
 "da":[91,75,176],
 "museum":[-75,76,80],
+"wizard":[42,90,67],
 "hub":[-2,70,-69]};
 
 function getKeyBindFromKey(key,description){

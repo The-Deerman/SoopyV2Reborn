@@ -181,6 +181,14 @@ this.arachneKeeperMain=new ToggleSetting("Main Toggle for Arachne Keepers","this
 this.boxAroundArachneKeeper=new ToggleSetting("Box Around Arachne Keeper","red box",false,"arachne_keeper_box",this).requires(this.arachneKeeperMain);
 this.arachneKeeperSpawnAlert=new ToggleSetting("Arachne Keeper Spawned Alert","tell you if one of them spawned",false,"arachne_keeper_alert",this).requires(this.arachneKeeperMain);
 this.nestedEndermiteAlert=new ToggleSetting("Nested Endermite Spawn Alert","they spawn from shiny blocks",false,"nested_endermite_alert",this);
+this.HideWolfPups=new ToggleSetting("Hide Sven Pup nametags","I donno someone asked for this",false,"Hide_Wolf_Pups",this);
+this.registerEvent("renderEntity", (entity, pos, partialTick, event) => {
+if(this.HideWolfPups.getValue()){
+let NAME = entity.getName()
+if(NAME.includes('Sven Pup')){
+cancel(event)
+}
+}
 this.registerChat("&r&5&lENDER NODE! &r&fYou found &r&cEndermite Nest&r&f!&r",()=>{
 if(this.nestedEndermiteAlert.getValue()){
 Client.showTitle("&cNested Endermite!","",0,60,20);

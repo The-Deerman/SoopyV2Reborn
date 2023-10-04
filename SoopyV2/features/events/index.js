@@ -336,7 +336,6 @@ class Events extends Feature {
                         gY--;
                     }
                     drawCoolWaypoint(this.guessPoint2[0], gY + 3, this.guessPoint2[2], 255, 255, 0, { name: "\xA7eGuess" + (warpLoc ? " \xA77(" + warpLoc + ")" : "") });
-                    //this.guessPoint2[1] = gY; This assignment isn't necessary if the one around 664-666 fixes it
                 }
 
             }
@@ -470,9 +469,7 @@ class Events extends Feature {
             let d = calculateDistance(warpData[w], this.guessPoint2);
             if (d < minDist) {
                 warp = "warp " + w;
-                console.log("Warp:", warp, "d:", d, "minDist:", minDist, "Guess:", this.guessPoint2, "Player XYZ:", Player.getX(), Player.getY(), Player.getZ());
                 minDist = d;
-
             }
         });
 

@@ -786,6 +786,7 @@ Thread.sleep(100);
 }
 
 this.finishedLoading=true;
+ChatLib.chat(this.messagePrefix+"This is an unofficial version of Soopyv2, maybe by The_Deerman and SpiringJurre!")
 ChatLib.chat(this.messagePrefix+"SoopyV2 Loaded!");
 logger.logMessage("SoopyV2 took "+((Date.now()-startLoading)/1000).toFixed(2)+"s to load",3);
 }

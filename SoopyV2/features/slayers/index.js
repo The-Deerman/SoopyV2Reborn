@@ -189,6 +189,7 @@ if(NAME.includes('Sven Pup')){
 cancel(event)
 }
 }
+});
 this.registerChat("&r&5&lENDER NODE! &r&fYou found &r&cEndermite Nest&r&f!&r",()=>{
 if(this.nestedEndermiteAlert.getValue()){
 Client.showTitle("&cNested Endermite!","",0,60,20);

@@ -1,6 +1,3 @@
-
-
-
 import Feature from "../../featureClass/class";
 import { drawBoxAtBlock, drawBoxAtBlockNotVisThruWalls, drawBoxAtEntity, drawCoolWaypoint, drawLine, drawLineWithDepth, drawRect } from "../../utils/renderUtils";
 import ToggleSetting from "../settings/settingThings/toggle";

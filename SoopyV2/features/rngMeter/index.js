@@ -179,7 +179,7 @@ class rngMeter extends Feature {
             this.rngMeterData.slayer[slayerType].chosenItem = I
             this.rngMeterData.slayer[slayerType].fullMeter = this.baseMeter.slayer[slayerType][I].baseMeter
             this.rngMeterData.slayer[slayerType].baseChance = this.baseMeterToChance(this.baseMeter.slayer[slayerType][I].baseMeter)
-            
+
             let xp = this.rngMeterData.slayer[slayerType].currentMeter
             let Item = this.rngMeterData.slayer[slayerType].chosenItem
             let baseMeter = this.baseMeter.slayer[slayerType][Item].baseMeter
@@ -231,7 +231,7 @@ class rngMeter extends Feature {
         new Thread(() => {
             try {
                 this.baseMeter = JSON.parse(FileLib.read("./config/ChatTriggers/modules/SoopyV2/features/rngMeter/meterdata.json"))
-            } catch(e) {
+            } catch (e) {
                 delay(500, () => {
                     this.baseMeter = JSON.parse(FileLib.read("./config/ChatTriggers/modules/SoopyV2/features/rngMeter/meterdata.json"))
                 })

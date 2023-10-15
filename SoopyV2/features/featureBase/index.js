@@ -1,23 +1,25 @@
 
 
-import Feature from"../../featureClass/class";
+import Feature from "../../featureClass/class";
 
-class FeatureBase extends Feature{
-constructor(){
-super();
+class FeatureBase extends Feature {
+    constructor() {
+        super();
+    }
+
+    onEnable() {
+        this.initVariables();
+    }
+
+    initVariables() {
+    }
+
+    onDisable() {
+        this.initVariables();
+    }
 }
 
-onEnable(){
-this.initVariables();
-}
 
-initVariables(){
-}
-
-onDisable(){
-this.initVariables();
-}}
-
-
-module.exports={
-class:new FeatureBase};
+module.exports = {
+    class: new FeatureBase
+};

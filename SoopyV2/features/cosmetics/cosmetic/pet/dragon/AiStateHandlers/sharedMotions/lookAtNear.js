@@ -1,7 +1,1 @@
-
-
-
-
-export default function(pet){
-
-}
+export default function (pet) {}

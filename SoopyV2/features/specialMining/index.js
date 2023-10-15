@@ -169,7 +169,7 @@ class PowderAndScatha extends Feature {
         this.registerStep(true, 20, () => {
             if (!this.inCrystalHollows() || !this.useGlobalSludgeJuiceDrop.getValue() || !Player.getHeldItem()) return
             this.holdingJunglePick = Player.getHeldItem().getName().removeFormatting().endsWith("Jungle Pickaxe")
-        }) 
+        })
         this.registerStep(true, 5, () => {
             if (!this.inCrystalHollows()) {
                 this.sludgeCounter = 0
@@ -380,7 +380,7 @@ class PowderAndScatha extends Feature {
 
             Renderer.retainTransforms(false)
         }
-        
+
         if (this.scathaCounterElement.isEnabled()) {
             let width2 = Renderer.getStringWidth("&9Rare Scatha Pets: 999")
 
@@ -480,7 +480,7 @@ class PowderAndScatha extends Feature {
             }
         }
 
-        
+
         this.overlayLeft2 = []
         this.overlayRight2 = []
         if (this.scathaCounter.getValue() && this.inCrystalHollows()) {

@@ -1,37 +1,38 @@
-class CategoryManager{
-constructor(){
-this.categorys={};
+class CategoryManager {
+    constructor() {
+        this.categorys = {};
 
-this.arr=[];
+        this.arr = [];
+    }
+
+    addCategory(category) {
+
+
+        this.categorys[category.name] = category;
+        this.update();
+    }
+
+    deleteCategory(category) {
+        delete this.categorys[category.name];
+        this.update();
+    }
+
+    update() {
+
+        this.arr = Object.values(this.categorys).sort((a, b) => {
+            return b.priority - a.priority;
+        });
+    }
 }
 
-addCategory(category){
 
 
-this.categorys[category.name]=category;
-this.update();
-}
+if (!global.soopyv2CategoryManager) {
+    global.soopyv2CategoryManager = new CategoryManager;
 
-deleteCategory(category){
-delete this.categorys[category.name];
-this.update();
-}
-
-update(){
-
-this.arr=Object.values(this.categorys).sort((a,b)=>{
-return b.priority-a.priority;
-});
-}}
-
-
-
-if(!global.soopyv2CategoryManager){
-global.soopyv2CategoryManager=new CategoryManager;
-
-register("gameUnload",()=>{
-global.soopyv2CategoryManager=undefined;
-});
+    register("gameUnload", () => {
+        global.soopyv2CategoryManager = undefined;
+    });
 }
 
 export default global.soopyv2CategoryManager;

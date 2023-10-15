@@ -1,4 +1,4 @@
-# soopyv2-reborn
+# Soopyv2Reborn
 SoopyV2Reborn module maintained by The_Deerman
 
 Continuation of SoopyV2 and SoopyV2Unoffical

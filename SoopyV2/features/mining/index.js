@@ -110,7 +110,7 @@ class Mining extends Feature {
         let money = 0;
         let gemstoneCosts = {};
         let lastMined = 0;
-        this.registerChat("&r&d&lPRISTINE! &r&fYou found &r${*} &r&aFlawed ${type} Gemstone &r&8x${num}&r&f!&r", (type, num, event) => {
+        this.registerChat("&r&d&lPRISTINE! &r&fYou found &r${*} Flawed ${type} Gemstone &r&8x${num}&r&f!&r", (type, num, event) => {
 
             let id = "FLAWED_" + type.toUpperCase() + "_GEM";
             let number = parseInt(num);

@@ -37,6 +37,10 @@ class Slayers extends Feature {
         return this.FeatureManager.features["dataLoader"].class.isInSkyblock;
     }
 
+    isInDungeon() {
+        return this.FeatureManager.features["dataLoader"].class.isInDungeon;
+    }
+
     doingSlayer() {
         if (!this.FeatureManager || !this.FeatureManager.features["dataLoader"] || !this.lastSlayerType) return false;
         switch (this.lastSlayerType) {

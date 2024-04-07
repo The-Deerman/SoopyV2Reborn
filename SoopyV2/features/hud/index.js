@@ -164,7 +164,7 @@ class Hud extends Feature {
         this.lobbyDayElement = new HudTextElement().
             setText("&6Day&7> &fLoading...").
             setToggleSetting(this.showLobbyDay).
-            setLocationSetting(new LocationSetting("Lobby Day Location", "Allows you to edit the location of the lobby day", "lobby_day_location", this, [10, 90, 1, 1]).
+            setLocationSetting(new LocationSetting("Lobby Day Location", "Allows you to edit the location of the lobby day", "lobby_day_location", this, [10, 0, 1, 1]).
                 requires(this.showLobbyDay).
                 editTempText("&6Day&7> &f5.15"));
         this.showLobbyDayOnlyUnder30 = new ToggleSetting("Show Current Lobby Day ONLY WHEN under day 30", "", true, "lobby_day_30", this);
@@ -271,7 +271,7 @@ class Hud extends Feature {
         this.showThunderingTimer = new ToggleSetting("Spider den thundering timer", "", true, "spider_thundering_timer", this);
         this.thunderTimerElement = new HudTextElement().
             setToggleSetting(this.showThunderingTimer).
-            setLocationSetting(new LocationSetting("Thunder timer element", "Allows you to edit the location of the thunder timer", "thunder_timer_elmement", this, [10, 70, 1, 1]).
+            setLocationSetting(new LocationSetting("Thunder timer element", "Allows you to edit the location of the thunder timer", "thunder_timer_elmement", this, [10, 80, 1, 1]).
                 requires(this.showThunderingTimer));
         this.hudElements.push(this.thunderTimerElement);
 

@@ -40,18 +40,8 @@ class GlobalSettings extends Feature {
     }
 
     onEnable() {
-        this.apiKeySetting = new TextSetting("Api Key", "Your hypixel api key", "", "api_key", this, "Run /api new to load", true);
-        this.verifyApiKey = new ButtonSetting("Verify api key", "Click this to make sure the api key is working", "verify_key", this, "Click!", this.verifyKey2, undefined);
-        this.newApiKey = new ButtonSetting("Run /api new", "This is here so u dont need to exit and re-enter", "api_new_command", this, "Click!", this.apiNewCommand, undefined);
-        this.findApiKey = new ButtonSetting("Attempt to load api key from other mods", "This will scan other mods configs to attempt to find your key", "find_key", this, "Click!", () => { this.findKey() }, undefined);
-
         this.alertAllUpdates = new ToggleSetting("Send chat update avalible for all updates", "If disabled itll notify for new updates less", false, "alert_all_updates", this);
-
         this.darkTheme = new ToggleSetting("Dark theme", "This might be scuffed because guis are still made in light theme", false, "dark_theme", this);
-
-
-
-
         this.hideFallingBlocks = new ToggleSetting("Hide falling blocks", "NOTE: This setting is a bit laggy", false, "hide_falling_sand", this);
         this.twitchCommands = new ToggleSetting("Ingame twitch bot commands", "Allows u to use twitch bot commands ingame (eg -sa)", true, "twitch_commands_ingame", this);
         this.handChat = new ToggleSetting("Replace [hand] with ur currently held item", "Idea from Synthesis im only adding cus i dont have D:", true, "hand_chat", this);
@@ -161,8 +151,6 @@ class GlobalSettings extends Feature {
 
         this.registerEvent("itemTooltip", this.itemTooltipEvent).registeredWhen(() => this.itemWorth.getValue() || this.showChampion.getValue() || this.showHecatomb.getValue());
 
-
-        this.registerChat("&aYour new API key is &r&b${key}&r", this.newKey);
         const EntityFallingBlock = Java.type("net.minecraft.entity.item.EntityFallingBlock");
 
         this.registerEvent("renderEntity", (entity, posVec, partialTicks, event) => {
@@ -268,74 +256,10 @@ class GlobalSettings extends Feature {
                     ChatLib.chat(this.FeatureManager.messagePrefix + "&7" + message);
                     toMessageWithLinks(this.FeatureManager.messagePrefix + text, "7").chat();
                 });
-                return;
-            }
-
-            if (this.handChat.getValue() && message.toLowerCase().includes("[hand]")) {
-                message = message.replace("/w", `/msg senna_um`)
-                cancel(event);
-                ChatLib.addToSentMessageHistory(message);
-
-                let data = Player.getHeldItem().getNBT().toObject();
-
-                fetch("https://soopy.dev/api/soopyv2/itemup", {
-                    postData: {
-                        name: data.tag.display.Name,
-                        lore: data.tag.display.Name + "\n" + data.tag.display.Lore.join("\n")
-                    }
-                }).
-
-                    text().then((text) => {
-                        if (text.length > 20) {
-                            ChatLib.chat(this.FeatureManager.messagePrefix + "There was an error uploading the item data!");
-                            return;
-                        }
-
-                        ChatLib.say(message.replace(/\[hand\]/gi, "[ITEM:" + text + "]"));
-                    });
-                return;
             }
         });
-
-        let ev = this.registerChat("${*}[ITEM:${*}", (event) => {
-            let message = new Message(event);
-            if (!message.getUnformattedText().match(/\[ITEM:([0-9]+)\]/g)) return;
-            cancel(event);
-
-            let [_] = message.getUnformattedText().match(/\[ITEM:([0-9]+)\]/g);
-            let id = _.replace("[ITEM:", "").replace(/\]$/g, "");
-
-            fetch("https://soopy.dev/api/soopyv2/itemdown/" + id).json().then(([name, lore]) => {
-                for (let i = 0; i < message.getMessageParts().length; i++) {
-                    let component = message.getMessageParts()[i];
-
-                    if (component.getText().match(/\[ITEM:([0-9]+)\]/g)) {
-                        let [_] = component.getText().match(/\[ITEM:([0-9]+)\]/g);
-                        let id = _.replace("[ITEM:", "").replace(/\]$/g, "");
-
-                        message.setTextComponent(i, new TextComponent(component.getText().replace("[ITEM:" + id + "]", name + "&r").replace(/\[ITEM:([0-9]+)\]/g, "[ITEM:&r$1]")).setHover("show_text", lore));
-                    }
-                }
-                message.setRecursive(true);
-                message.chat();
-            }).catch(() => {
-                ChatLib.chat(this.FeatureManager.messagePrefix + "There was an error downloading the item data!");
-                message.chat();
-            });
-
-        });
-        ev.trigger.setPriority(Priority.HIGHEST);
 
         this.ahAlerts = [];
-
-
-
-
-
-
-
-
-
         this.registerStep(false, 60, () => {
             return Promise.resolve().then(() => {
                 return (() => {
@@ -380,7 +304,6 @@ class GlobalSettings extends Feature {
                 })()
             }).then(() => { })
         });
-
 
         this.registerCommand("price", () => {
             return Promise.resolve().then(() => {
@@ -744,19 +667,6 @@ class GlobalSettings extends Feature {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     guiClicked(mouseX, mouseY, button, gui, event) {
         if (Player.getContainer() && Player.getContainer().getName() === "Cookie Clicker v0.01") {
 
@@ -793,13 +703,7 @@ class GlobalSettings extends Feature {
         renderLibs.drawString("Lifetime Cookies: " + numberWithCommas(cookieCount), 10, 10, 1);
 
         if (socketConnection.cookieData) {
-
-
-
-
-
             let linesOfText = [];
-
             linesOfText.push("---- CURRENTLY CLICKING ----");
             for (let data of socketConnection.cookieData.clickingNow) {
                 linesOfText.push(data[0] + ": " + numberWithCommas(data[1]));
@@ -922,76 +826,6 @@ class GlobalSettings extends Feature {
             FileLib.write("soopyAddonsData", "soopyv2firstloaddata.json", JSON.stringify(this.firstLoadPageData));
         }
     }
-    verifyKey(key) {
-
-        if (key) {
-            try {
-                var url = "https://api.hypixel.net/key?key=" + key;
-                let data = fetch(url).jsonSync();
-
-
-
-                if (data.success) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (e) {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    apiNewCommand() {
-        ChatLib.command("api new");
-    }
-
-    verifyKey2(key) {
-        if (key) {
-            try {
-                var url = "https://api.hypixel.net/key?key=" + key;
-                let data = fetch(url).jsonSync();
-
-                if (data.success) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (e) {
-                return false;
-            }
-        }
-        if (this.module.apiKeySetting.getValue() == "") {
-            new Notification("\xA7cError!", ["You need to set an api key first!"]);
-            return;
-        }
-
-
-        new Thread(() => {
-            try {
-                var url = "https://api.hypixel.net/key?key=" + this.module.apiKeySetting.getValue();
-                let data = fetch(url).jsonSync();
-
-                if (data.success) {
-                    new Notification("\xA7aSuccess!", ["Your api key is valid!"]);
-                    return;
-                } else {
-                    new Notification("\xA7cError!", ["Your api key is invalid!"]);
-                    return;
-                }
-            } catch (e) {
-                new Notification("\xA7cError!", ["Your api key is invalid!"]);
-                return;
-            }
-        }).start();
-    }
-
-    newKey(key, event) {
-        ChatLib.chat(this.FeatureManager.messagePrefix + "Copied api key!");
-        this.apiKeySetting.setValue(key);
-    }
 
     initVariables() {
         this.hudElements = [];
@@ -1002,7 +836,6 @@ class GlobalSettings extends Feature {
         this.initVariables();
     }
 }
-
 
 class FirstLoadingPage extends GuiPage {
     constructor(mainThing) {
@@ -1058,8 +891,6 @@ module.exports = {
     class: new GlobalSettings
 };
 
-
-
 const ByteArrayInputStream = Java.type("java.io.ByteArrayInputStream");
 const Base64 = Java.type("java.util.Base64");
 const CompressedStreamTools = Java.type("net.minecraft.nbt.CompressedStreamTools");
@@ -1070,8 +901,6 @@ function decompress(compressed) {
 
     return new NBTTagCompound(CompressedStreamTools.func_74796_a(new ByteArrayInputStream(Base64.getDecoder().decode(compressed))));
 }
-
-
 
 function parseNwDataThing(data) {
     let ret = {};
@@ -1092,6 +921,5 @@ function parseNwDataThing(data) {
 
     }
     ret = Object.values(ret).sort((a, b) => b.price - a.price);
-
     return ret;
 }

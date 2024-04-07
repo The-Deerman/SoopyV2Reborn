@@ -136,4 +136,4 @@ class DisableFeatures extends FirstLoadPage {
 }
 
 
-export default [new WelcomePage, new ApiKeyPage, new DisableFeatures, new HowToOpenMenuPage];
+export default [new WelcomePage, new DisableFeatures, new HowToOpenMenuPage];

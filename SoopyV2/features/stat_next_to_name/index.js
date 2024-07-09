@@ -132,8 +132,8 @@ class StatNextToName extends Feature {
 
     updatePlayerNametag(player) {
         let stats = this.userStats[player.getUUID().toString().replace(/-/g, "")];
-
-	let nameTagString = player.getDisplayName().getText().replace(/§8\[§.\d+§8\] /, '').replace(/[^a-zA-Z0-9_§]/g, '');
+	let nameTagString = player.getDisplayName().getText().match(`§.${player.getName()}`);
+	if (!nameTagString) {return;}
 
         nameTagString += " &2[";
         if (stats.usingSoopyv2) nameTagString += "&d\u269D&2";

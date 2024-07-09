@@ -112,7 +112,7 @@ class Nether extends Feature {
         this.fireballEntityToOffset = new WeakMap;
         this.fireballEntityLastLastX = new WeakMap;
 
-        this.registerChat("                      Test of Control OBJECTIVES", () => {
+        this.registerChat("&r&f${*}&r&aTest of Control &r&e&lOBJECTIVES&r", () => {
             this.controlSkeleton = undefined;
             this.controlLocLast = undefined;
             this.controlLoc = undefined;
@@ -128,28 +128,28 @@ class Nether extends Feature {
 
         this.registerForge(net.minecraftforge.event.entity.EntityJoinWorldEvent, this.entityJoinWorldEvent).registeredWhen(() => this.isInDojo() || this.isInNether() && this.minibossNametag.getValue());
         this.registerEvent("tick", this.tick).registeredWhen(() => this.isInNether());
-        this.registerChat("&r&r&r                    &r&aTest of Swiftness &r&e&lOBJECTIVES&r", () => {
+        this.registerChat("&r&f${*}&r&aTest of Swiftness &r&e&lOBJECTIVES&r", () => {
             if (this.speedNextBlock.getValue()) {
                 this.inSwiftness = true;
                 this.lastBlock = [Math.floor(Player.getX()), Math.floor(Player.getY()) - 1, Math.floor(Player.getZ())];
             }
         });
 
-        this.registerChat("&r&r&r                     &r&cTest of Discipline &r&e&lOBJECTIVES&r", () => {
+        this.registerChat("&r&f${*}&r&cTest of Discipline &r&e&lOBJECTIVES&r", () => {
             if (this.disciplineOverlay.getValue()) {
                 this.inDiscipline = true;
                 this.todoF = [];
                 this.todoF2 = [];
             }
         });
-        this.registerChat("&r&r&r                      &r&dTest of Stamina &r&e&lOBJECTIVES&r", () => {
+        this.registerChat("&r&f${*}&r&dTest of Stamina &r&e&lOBJECTIVES&r", () => {
             if (true) {
                 this.inStamina = true;
                 this.centerloc = undefined;
             }
         });
 
-        this.registerChat("&r&r&r           ${*}&r&6Your Rank: &r${*}&r", () => {
+        this.registerChat("&r&f           ${*}&r&6Your Rank: &r${*}&r", () => {
             this.inSwiftness = false;
             this.lastBlock = undefined;
             this.inDiscipline = false;

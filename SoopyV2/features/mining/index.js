@@ -63,7 +63,7 @@ class Mining extends Feature {
             setToggleSetting(this.nextChEvent).
             setLocationSetting(new LocationSetting("HUD Location", "Allows you to edit the location of the hud element", "chevent_hud_location", this, [10, 70, 1, 1]).
                 requires(this.nextChEvent).
-                editTempText("&6Event&7> &fGONE WITH THE WIND &7->&f 2X POWDER"));
+                editTempText("&6Event&7> &f??? &7->&f ???"));
         this.hudElements.push(this.nextChEventElement);
 
 

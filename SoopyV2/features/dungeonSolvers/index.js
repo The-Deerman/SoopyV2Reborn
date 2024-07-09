@@ -653,7 +653,7 @@ class DungeonSolvers extends Feature {
                 this.levers.push(new Waypoint(term.location[0], term.location[1], term.location[2], 1, 0, 0, { name: "Lever" }).startRender());
             }
             if (term.type === "terminal") {
-                this.terminals.push(new Waypoint(term.location[0], term.location[1], term.location[2], 1, 0, 0, { name: "Terminal" }).startRender());
+                this.terminals.push(new Waypoint(term.location[0], term.location[1], term.location[2], 1, 0, 0, { name: term.name }).startRender());
             }
             if (term.type === "device") {
                 this.devices.push(new Waypoint(term.location[0], term.location[1], term.location[2], 1, 0, 0, { name: "Device" }).startRender());

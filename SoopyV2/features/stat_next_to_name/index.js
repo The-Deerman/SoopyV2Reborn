@@ -45,49 +45,17 @@ class StatNextToName extends Feature {
 
         this.loadingStats = [];
         this.lastWorldLoad = undefined;
-        this.apiKeyThing = new ToggleSetting("Use ur api key for data loading", "Max of 12 requests/min", true, "api_key_stat_load", this);
-
+       
         soopyV2Server.onPlayerStatsLoaded = (stats) => { this.playerStatsLoaded.call(this, stats) };
-
-        soopyV2Server.apithingo = (uuid, packetId) => {
-            return Promise.resolve().then(() => {
-                let key = this.FeatureManager.features["globalSettings"].class.apiKeySetting.getValue(); return (() => {
-                    if (!!key) {
-                        return Promise.resolve().then(() => {
-                            return (
-
-                                fetch(`https://api.hypixel.net/skyblock/profiles?key=${key}&uuid=${uuid}`).text())
-                        }).then((_resp) => {
-                            let t = _resp;
-                            soopyV2Server.respondQueue(packetId, t);
-                            inQAtm = false
-                        })
-                    }
-                })()
-            }).then(() => { })
-        };
-
 
 
         this.registerStep(false, 3, this.loadPlayerStatsTick).registeredWhen(() => this.FeatureManager.features["dataLoader"].class.isInSkyblock);
         this.registerEvent("worldLoad", this.worldLoad);
-
         this.registerEvent("playerJoined", this.playerJoined);
-
         this.worldLoad();
-
-
-
-
-
-
-
-
-
 
         this.registerStep(false, 5, () => {
             if (keyValid && this.apiKeyThing.getValue() && (!inQAtm || Date.now() - this.lastJoinedQueue > 60000 * 3)) {
-
                 soopyV2Server.joinApiQ();
                 inQAtm = true;
                 this.lastJoinedQueue = Date.now();
@@ -97,19 +65,6 @@ class StatNextToName extends Feature {
         this.lastJoinedQueue = 0;
         let inQAtm = false;
         let keyValid = false;
-        let key = undefined;
-        new NonPooledThread(() => {
-            while (!this.FeatureManager.features["globalSettings"] || !this.FeatureManager.features["globalSettings"].class) {
-                Thread.sleep(1000);
-            }
-
-            key = this.FeatureManager.features["globalSettings"].class.apiKeySetting.getValue();
-            fetch("https://api.hypixel.net/key?key=" + key).json().then((d) => {
-                if (d.success) {
-                    keyValid = true;
-                }
-            });
-        }).start();
     }
 
     loadPlayerStatsTick() {

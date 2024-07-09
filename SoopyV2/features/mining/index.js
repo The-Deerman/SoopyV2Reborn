@@ -87,7 +87,7 @@ class Mining extends Feature {
         this.registerEvent("itemTooltip", this.itemTooltipEvent).registeredWhen(() => this.showContainedGemstoneSlots.getValue() || this.showUnlockedGemstoneSlots.getValue());
         this.registerEvent("renderWorld", this.renderWorld).registeredWhen(() => this.guessBalHp.getValue() || this.metalDetectorSolver.getValue());
 
-        this.registerChat("&r&c&o&r&6&lRARE DROP! &r&eA Bal Pet dropped!&r", () => {
+        this.registerChat("&r&6&lRARE DROP! &r&eA Bal Pet dropped!&r", () => {
             if (this.balPetAlert.getValue()) {
                 World.playSound("random.orb", 1, 1);
                 Client.showTitle("\xA7r\xA7c\xA7o\xA7r\xA76\xA7lRARE DROP! \xA7r\xA7eA Bal Pet dropped!\xA7r", "", 20, 50, 20);

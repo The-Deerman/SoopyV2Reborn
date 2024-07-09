@@ -419,28 +419,9 @@ class FeatureManager {
 
     startCatchingEvent(event) {
         if (this.eventObjects[event]) return;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         this.eventObjects[event] = register(event, (...args) => {
-
             this.triggerEvent(event, args);
-
         });
-
-
         logger.logMessage("Registered " + event + " event", 4);
     }
 

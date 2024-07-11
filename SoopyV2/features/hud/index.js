@@ -43,7 +43,7 @@ class Hud extends Feature {
         this.cpsSeperate = undefined;
         this.cpsIncludeRight = undefined;
 
-        this.petLevels = undefined;
+        this.spawnedPet = undefined;
 
         this.lastTickTime = undefined;
         this.framesSince = undefined;
@@ -327,36 +327,38 @@ class Hud extends Feature {
 
         this.registerEvent("renderOverlay", this.renderHud).registeredWhen(() => this.showSpotifyPlaying.getValue() || this.witherImpactCooldownSetting.getValue());
         this.registerStep(true, 5, this.step);
+        this.registerStep(true, 3, this.scan_pets).registeredWhen(() => this.scanGuiForPet.getValue());
         this.registerStep(false, 5, this.step_5second);
         this.registerEvent("renderWorld", this.renderWorld).registeredWhen(() => this.fpsEnabledSetting.getValue() && this.fpsFastSetting.getValue());
         this.registerEvent("worldLoad", this.worldLoad);
+        this.registerEvent("itemTooltip", this.hovered_pet).registeredWhen(() => this.petEnabledSetting.getValue());
 
-
-        this.petLevels = {};
         this.petText = "&6Pet&7> &fLoading...";
         this.petElement.setText(this.petText);
-        this.registerChat("&cAutopet &eequipped your ${pet}&e! &a&lVIEW RULE&r", (pet) => {
-            this.petElement.setText("&6Pet&7> " + pet);
-            this.petText = "&6Pet&7> " + pet;
-
+        this.registerChat("&cAutopet &eequipped your ${*}&e! &a&lVIEW RULE&r", (event) => {
+            this.petText = "&6Pet&7> " + new Message(event).getMessageParts()[0].getHoverValue().match(/§r§aEquip: (.+)\n/)[1].replace(/\xA7r/g, "");
+            this.petElement.setText(this.petText);
             this.lastSwappedPet = Date.now();
         });
         this.registerChat("&r&aYou summoned your &r${pet}&r&a!&r", (pet) => {
-            this.petElement.setText("&6Pet&7> &7[Lvl " + (this.petLevels[pet.replace("&", "\xA7")] || "??") + "] " + pet);
-            this.petText = "&6Pet&7> &7[Lvl " + (this.petLevels[pet.replace("&", "\xA7")] || "??") + "] " + pet;
-
+            pet = pet.replace(/&r/g, "").replace(/&/g, "\xA7");
+            this.petText = "&6Pet&7> " + (this.spawnedPet.includes(pet) ? this.spawnedPet : pet);
+            this.petElement.setText(this.petText);
             this.lastSwappedPet = Date.now();
         });
         this.registerChat("&r&aYou despawned your &r${*}&r&a!&r", () => {
-            this.petElement.setText("&6Pet&7> &cNone");
             this.petText = "&6Pet&7> &cNone";
-
+            this.petElement.setText(this.petText);
             this.lastSwappedPet = Date.now();
         });
         this.registerChat("&r&aYour &r${pet} &r&aleveled up to level &r&9${level}&r&a!&r", (pet, level) => {
             if (ChatLib.removeFormatting(this.petText.split("] ")[1].trim()) === ChatLib.removeFormatting(pet.trim())) {
-                this.petElement.setText("&6Pet&7> &7[Lvl " + (level || "??") + "] " + pet);
-                this.petText = "&6Pet&7> &7[Lvl " + (level || "??") + "] " + pet;
+                const levelMatch = this.petElement.getText().match(/Lvl (\d+)/);
+                const currentLevel = levelMatch ? parseInt(levelMatch[1]) : 0;
+                const newLevel = Number.isNaN(parseInt(level)) ? 0 : parseInt(level);
+                if (newLevel <= currentLevel) return;
+                this.petText = this.petElement.getText().replace(/Lvl \d+/, `Lvl ${level}`);
+                this.petElement.setText(this.petText);
                 this.lastSwappedPet = Date.now();
             }
         });
@@ -577,26 +579,6 @@ class Hud extends Feature {
         }
         this.cpsElement.setText("&6Cps&7> &f" + cpsText);
 
-
-        if (this.scanGuiForPet.getValue() && Player && Player.getContainer() && Player.getContainer().getName().includes("Pets (")) {
-            let inv = Player.getContainer().getItems();
-            for (let i = 0; i < inv.length; i++) {
-                if (inv[i] != null && inv[i].getName().includes("[Lvl ")) {
-                    let level = inv[i].getName().split(" ")[1].replace("]", "");
-                    if (!this.petLevels[inv[i].getName().split("] ")[1]] || this.petLevels[inv[i].getName().split("] ")[1]] < level) this.petLevels[inv[i].getName().split("] ")[1]] = level;
-
-                    if (Date.now() - this.lastSwappedPet > 1000) {
-                        getLore(inv[i]).forEach((line) => {
-                            if (line.includes("Click to despawn!")) {
-                                this.petElement.setText("&6Pet&7> &7" + inv[i].getName().split("(")[0]);
-                                this.petText = "&6Pet&7> &7" + inv[i].getName().split("(")[0];
-                            }
-                        });
-                    }
-                }
-            }
-        }
-
         this.dragonDamageElement.setText("");
 
         if (this.showDragonDamages.getValue()) {
@@ -690,6 +672,29 @@ class Hud extends Feature {
             }
         }
         this.lastAbsorbtion = Player.getPlayer()["func_110139_bj"]();
+    }
+
+    scan_pets() {
+        if (this.scanGuiForPet.getValue() && Player?.getContainer()?.getName()?.includes("Pets")) {
+            let inv = Player.getContainer().getItems();
+            for (let item of inv) {
+                let itemName = item?.getName();
+                if (itemName?.includes("[Lvl ") && Date.now() - this.lastSwappedPet > 1000) {
+                    getLore(item)?.forEach((line) => {
+                        if (!line.includes("Click to despawn!")) {
+                            this.petText = `&6Pet&7> &7${itemName.split("(")[0]}`;
+                            this.petElement.setText(`&6Pet&7> &7${petText}`);
+                        }
+                    });                 
+                }
+            }
+        }
+    }
+
+    hovered_pet(tooltip, item, event) {
+        if (Player?.getContainer()?.getName()?.includes("Pets")) {
+            if (item?.getName()?.includes("[Lvl ")) this.spawnedPet = item.getName();
+        }
     }
 
     step_5second() {

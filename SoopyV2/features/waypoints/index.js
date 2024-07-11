@@ -346,7 +346,7 @@ class Waypoints extends Feature {
                 }
                 lastLoc = loc;
 
-                if (Date.now() - this.lastSend > 1000 && Date.now() - this.lastTp > 5000) {
+                if (Date.now() - this.lastSend > 4000 && Date.now() - this.lastTp > 5000) {
                     Scoreboard.getLines().forEach((line) => {
                         line = ChatLib.removeFormatting(line.getName()).replace(/[^0-9A-z]/g, "");
                         if (Object.keys(areas).includes(line)) {

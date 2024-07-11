@@ -170,13 +170,13 @@ class Mining extends Feature {
             lastWorldChange = Date.now();
         });
 
-        this.registerChat("&r&r&r        ${spaces}&r&${color}&l${event} ENDED!&r", (spaces, color, event) => {
+        this.registerChat("&r&f${spaces}&r&${color}&l${event} ENDED!&r", (spaces, color, event) => {
             if (Date.now() - lastWorldChange < 5000) return;
             if (!this.isInCH()) return;
 
             socketConnection.sendCHEventData(event.trim(), false);
         });
-        this.registerChat("&r&r&r        ${spaces}&r&${color}&l${event} STARTED!&r", (spaces, color, event) => {
+        this.registerChat("&r&f${spaces}&r&${color}&l${event} STARTED!&r", (spaces, color, event) => {
             if (Date.now() - lastWorldChange < 5000) return;
             if (!this.isInCH()) return;
 

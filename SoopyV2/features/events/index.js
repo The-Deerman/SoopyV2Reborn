@@ -274,7 +274,7 @@ class Events extends Feature {
     }
 
     step_1fps() {
-        if (!this.MythMobsHPGuiElement.getValue() || !this.showingWaypoints) return;
+        if (!this.MythMobsHPGuiElement.getValue()) return;
         World.getAllEntitiesOfType(net.minecraft.entity.item.EntityArmorStand).forEach((mob) => {
             let name = mob.getName();
             if (!this.Mobs?.map((a) => a.getUUID().toString()).includes(mob.getUUID().toString())) {

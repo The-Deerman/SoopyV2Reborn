@@ -26,6 +26,7 @@ class PowderAndScatha extends Feature {
         this.compactedChat = new ToggleSetting("Compact Powder Messages", "same as the one in skytils but support following setting", false, "compact_powder_chat", this)
         this.fixChatForDoublePowder = new ToggleSetting("Fix Chat Messages During Double Powder", "so it's the correct amount of powder you received during the event", false, "fix_chat_dpowder", this)
         this.fixChatForDoublePowderSuffix = new TextSetting("Suffix of previous message", "(so you can tell whether it's 2x powder) change it yourself!", "&a(&b2X Powder&a)", "chat_dpowder_suffix", this, "(none)", false).requires(this.fixChatForDoublePowder);
+        this.compactedEssenceChat = new ToggleSetting("Compact Essence Messages", "only works in CH does the same for essence as it does for powder", false, "compact_essence_chat", this)
         this.PowderElement = new ToggleSetting("Powder Mining Features (MAIN TOGGLE)", "", true, "powder_mining_hud", this).contributor("EmeraldMerchant");
         this.PowderHudElement = new ToggleSetting("Powder info on hud", "This will show your current powder mining section (only in CH)", true, "powder_gui_element", this).requires(this.PowderElement)
         this.PowderOverlayElement = new HudTextElement()
@@ -79,32 +80,36 @@ class PowderAndScatha extends Feature {
             Pickonimbus_2000: "&5Pickonimbus 2000",
             Prehistoric_Egg: "&fPrehistoric Egg"
         }
-        //&r&aYou received &r&f1 &r&a&r&aGreen Goblin Egg&r&a.&r
-        this.registerChat("&r&aYou received ${thing}&r&a.&r", (thing, e) => {
-            if (this.hideGemstoneMessage.getValue() && thing.endsWith("Gemstone") && (this.showFlawlessGemstone.getValue() ? !thing.includes("Flawless") : true)) {
+        
+        this.registerChat("&r    &r${thing}&r", (thing, e) => {
+	    if (!this.inCrystalHollows()) return;
+            if (this.hideGemstoneMessage.getValue() && thing.includes("Gemstone") && !thing.includes("Powder") && (this.showFlawlessGemstone.getValue() ? !thing.includes("Flawless") : true)) {
                 cancel(e)
                 if (thing.includes("Amethyst")) this.tempLocation = "Jungle"
                 if (thing.includes("Sapphire")) this.tempLocation = "Precursor_Remnants"
                 if (thing.includes("Amber")) this.tempLocation = "Goblin_Holdout"
                 if (thing.includes("Jade")) this.tempLocation = "Mithril_Deposits"
             }
-            if (this.hideWishingCompassMessage.getValue() && thing.endsWith("Wishing Compass")) cancel(e)
-            if (this.hideAscensionRope.getValue() && thing.endsWith("Ascension Rope")) cancel(e)
+            if (this.hideWishingCompassMessage.getValue() && thing.includes("Wishing Compass")) cancel(e)
+            if (this.hideAscensionRope.getValue() && thing.includes("Ascension Rope")) cancel(e)
             if (this.showAreaTreasure.getValue()) {
-                let treasure = undefined
-                let amount = Math.floor(Number(thing.split(" ")[0].removeFormatting()))
+                let treasure;
+                let amount = 1;  // Default amount in case there's no match
+                let matchResult = thing.match(/&r&8x([\d,]+)/);
+                if (matchResult) amount = Math.floor(Number(matchResult[1].replace(",", "").removeFormatting()));
+
                 //jungle
                 if (!this.useGlobalSludgeJuiceDrop.getValue()) {
-                    if (thing.endsWith("Sludge Juice")) treasure = "Sludge_Juice"
+                    if (thing.includes("Sludge Juice")) treasure = "Sludge_Juice"
                 }
-                if (thing.endsWith("Oil Barrel")) treasure = "Oil_Barrel"
-                if (thing.endsWith("Jungle Heart")) treasure = "Jungle_Heart"
+                if (thing.includes("Oil Barrel")) treasure = "Oil_Barrel"
+                if (thing.includes("Jungle Heart")) treasure = "Jungle_Heart"
                 if (treasure) {
                     this.addTreasure("Jungle", treasure, amount)
                     return
                 }
                 //goblin holdout
-                if (thing.endsWith("Goblin Egg")) {
+                if (thing.includes("Goblin Egg")) {
                     if (thing.includes("Green")) treasure = "Green_Goblin_Egg"
                     else if (thing.includes("Red")) treasure = "Red_Goblin_Egg"
                     else if (thing.includes("Yellow")) treasure = "Yellow_Goblin_Egg"
@@ -117,25 +122,25 @@ class PowderAndScatha extends Feature {
                 }
                 //&r&aYou received &r&f1 &r&9Superlite Motor&r&a.&r
                 //precursor city
-                if (thing.endsWith("Control Switch")) treasure = "Control_Switch"
-                if (thing.endsWith("FTX 3070")) treasure = "FTX_3070"
-                if (thing.endsWith("Electron Transmitter")) treasure = "Electron_Transmitter"
-                if (thing.endsWith("Robotron Reflector")) treasure = "Robotron_Reflector"
-                if (thing.endsWith("Synthetic Heart")) treasure = "Synthetic_Heart"
-                if (thing.endsWith("Superlite Motor")) treasure = "Superlite_Motor"
+                if (thing.includes("Control Switch")) treasure = "Control_Switch"
+                if (thing.includes("FTX 3070")) treasure = "FTX_3070"
+                if (thing.includes("Electron Transmitter")) treasure = "Electron_Transmitter"
+                if (thing.includes("Robotron Reflector")) treasure = "Robotron_Reflector"
+                if (thing.includes("Synthetic Heart")) treasure = "Synthetic_Heart"
+                if (thing.includes("Superlite Motor")) treasure = "Superlite_Motor"
                 if (treasure) {
                     this.addTreasure("Precursor_Remnants", treasure, amount)
                     return
                 }
                 //mithril deposits
-                if (thing.endsWith("Treasurite")) treasure = "Treasurite"
+                if (thing.includes("Treasurite")) treasure = "Treasurite"
                 if (treasure) {
                     this.addTreasure("Mithril_Deposits", treasure, amount)
                     return
                 }
                 //global
-                if (thing.endsWith("Pickonimbus 2000")) treasure = "Pickonimbus_2000"
-                if (thing.endsWith("Prehistoric Egg")) treasure = "Prehistoric_Egg"
+                if (thing.includes("Pickonimbus 2000")) treasure = "Pickonimbus_2000"
+                if (thing.includes("Prehistoric Egg")) treasure = "Prehistoric_Egg"
                 if (treasure) {
                     this.addTreasure("global", treasure, amount)
                     return
@@ -201,9 +206,12 @@ class PowderAndScatha extends Feature {
         }
         this.miningData = JSON.parse(FileLib.read("soopyAddonsData", "miningData.json") || "{}") || {}
         if (!this.miningData.powder) this.miningData.powder = { chests: 0, mithril: 0, gemstone: 0 }
+        if (!this.miningData.essence) this.miningData.essence = { gold: 0, diamond: 0 }
         this.expRateInfo = []
         this.mythrilRate = 0
         this.gemstoneRate = 0
+        this.goldEssenceRate = 0
+        this.diamondEssenceRate = 0
         this.chestRate = 0
         this.saveMiningData();
 
@@ -222,43 +230,67 @@ class PowderAndScatha extends Feature {
                 this.dPowder = Date.now() + 15 * 1000 * 60
             } else this.dPowder = 0
         })
-        this.registerChat("&r&aYou uncovered a treasure chest!&r", (e) => {
+        this.registerChat("&r  &r&${*}&lCHEST LOCKPICKED &r", (e) => {
             this.miningData.powder.chests++
             delay(100, () => {
-                this.expRateInfo.push([Date.now(), this.miningData.powder.mithril, this.miningData.powder.gemstone, this.miningData.powder.chests])
+                this.expRateInfo.push([Date.now(), this.miningData.powder.mithril, this.miningData.powder.gemstone, this.miningData.essence.gold, this.miningData.essence.diamond, this.miningData.powder.chests])
                 if (this.expRateInfo.length > 20) this.expRateInfo.shift()
 
-                let [time, mythril, gemstone, chest] = this.expRateInfo[0]
+                let [time, mythril, gemstone, gold, diamond, chest] = this.expRateInfo[0]
 
                 this.mythrilRate = (this.miningData.powder.mithril - mythril) / (Date.now() - time)
                 this.gemstoneRate = (this.miningData.powder.gemstone - gemstone) / (Date.now() - time)
+                this.goldEssenceRate = (this.miningData.essence.gold - gold) / (Date.now() - time)
+                this.diamondEssenceRate = (this.miningData.essence.diamond - diamond) / (Date.now() - time)
                 this.chestRate = (this.miningData.powder.chests - chest) / (Date.now() - time)
             })
         })
 
         this.lastPowderReceived = { mithril: 0, gemstone: 0 }
         this.lastPowderReceivedExecuted = false;
-        this.registerChat("&r&aYou received &r&b+${amount} &r&aMithril Powder.&r", (amount, e) => {
+        this.registerChat("&r    &r&2Mithril Powder &r&8x${amount}&r", (amount, e) => {
+            if (!this.inCrystalHollows()) return;
             let p = (this.dPowder ? 2 : 1) * parseInt(amount.replace(",", ""))
             this.miningData.powder.mithril += p
             if (this.compactedChat.getValue()) {
                 cancel(e)
                 this.lastPowderReceived.mithril += p
                 this.compactPowderChat();
-                return
             }
         })
-        this.registerChat("&r&aYou received &r&b+${amount} &r&aGemstone Powder.&r", (amount, e) => {
+        this.registerChat("&r    &r&dGemstone Powder &r&8x${amount}&r", (amount, e) => {
+            if (!this.inCrystalHollows()) return;
             let p = (this.dPowder ? 2 : 1) * parseInt(amount.replace(",", ""))
             this.miningData.powder.gemstone += p
             if (this.compactedChat.getValue()) {
                 cancel(e)
                 this.lastPowderReceived.gemstone += p
                 this.compactPowderChat();
-                return
             }
         })
-
+        
+        this.lastEssenceReceived = {gold: 0, diamond: 0 }
+        this.lastEssenceReceivedExecuted = false;
+        this.registerChat("&r    &r&dGold Essence${amount}", (amount, e) => {
+            if (!this.inCrystalHollows()) return;
+            let p = parseInt(amount.replace(",", "").replace("x", "").removeFormatting()) || 1;
+            this.miningData.essence.gold += p
+            if (this.compactedEssenceChat.getValue()) {
+                cancel(e)
+                this.lastEssenceReceived.gold += p
+                this.compactEssenceChat();
+            }
+        })
+        this.registerChat("&r    &r&dDiamond Essence${amount}", (amount, e) => {
+            if (!this.inCrystalHollows()) return;
+            let p = parseInt(amount.replace(",", "").replace("x", "").removeFormatting()) || 1;
+            this.miningData.essence.diamond += p
+            if (this.compactedEssenceChat.getValue()) {
+                cancel(e)
+                this.lastEssenceReceived.diamond += p
+                this.compactEssenceChat();
+            }
+        })
         this.chests = new Map()
 
 
@@ -381,7 +413,7 @@ class PowderAndScatha extends Feature {
             Renderer.retainTransforms(false)
         }
 
-        if (this.scathaCounterElement.isEnabled()) {
+        if (this.scathaCounterElement?.isEnabled()) {
             let width2 = Renderer.getStringWidth("&9Rare Scatha Pets: 999")
 
             let x2 = this.scathaCounterElement.locationSetting.x
@@ -520,10 +552,10 @@ class PowderAndScatha extends Feature {
                 let m = this.lastPowderReceived.mithril
                 let g = this.lastPowderReceived.gemstone
                 let msg = ""
-                if (g > 0) msg += `&r&aYou received &r&b+${numberWithCommas(g)} &r&aGemstone `
+                if (g > 0) msg += `&r&aYou received &r&b+${numberWithCommas(g)} &r&dGemstone&r `
                 if (m > 0) {
-                    if (!msg) msg += `&r&aYou received &r&b+${numberWithCommas(m)} &r&aMithril `
-                    else msg += `and &r&b+${numberWithCommas(m)} &r&aMithril `
+                    if (!msg) msg += `&r&aYou received &r&b+${numberWithCommas(m)} &r&2Mithril&r `
+                    else msg += `and &r&b+${numberWithCommas(m)} &r&2Mithril&r `
                 }
                 msg += `Powder&r.`
                 if (this.fixChatForDoublePowder.getValue() && this.dPowder) {
@@ -532,6 +564,26 @@ class PowderAndScatha extends Feature {
                 } else ChatLib.chat(msg)
                 this.lastPowderReceived = { mithril: 0, gemstone: 0 }
                 this.lastPowderReceivedExecuted = false
+            })
+        }
+    }
+
+    compactEssenceChat() {
+        if (!this.lastEssenceReceivedExecuted) {
+            this.lastEssenceReceivedExecuted = true
+            delay(300, () => {
+                let g = this.lastEssenceReceived.gold
+                let d = this.lastEssenceReceived.diamond
+                let msg = ""
+                if (g > 0) msg += `&r&aYou received &r&d+${numberWithCommas(g)} &r&6Gold&r `
+                if (d > 0) {
+                    if (!msg) msg += `&r&aYou received &r&d+${numberWithCommas(d)} &r&bDiamond&r `
+                    else msg += `and &r&b+${numberWithCommas(d)} &r&2Mithril&r `
+                }
+                msg += `&dEssence&r.`
+                ChatLib.chat(msg)
+                this.lastEssenceReceived = { gold: 0, diamond: 0 }
+                this.lastEssenceReceivedExecuted = false
             })
         }
     }

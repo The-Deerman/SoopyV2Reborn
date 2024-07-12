@@ -1,5 +1,4 @@
 import Feature from "../../featureClass/class";
-import { m } from "../../../mappings/mappings";
 import { numberWithCommas } from "../../utils/numberUtils";
 import HudTextElement from "../hud/HudTextElement";
 import LocationSetting from "../settings/settingThings/location";

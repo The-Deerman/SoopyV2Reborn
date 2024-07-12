@@ -8,7 +8,6 @@ import { delay } from "../../utils/delayUtils";
 import TextSetting from "../settings/settingThings/textSetting";
 import { drawBoxAtBlock, drawFilledBox } from "../../utils/renderUtils";
 import RenderLib2D from "../../utils/renderLib2d";
-import { f, m } from "../../../mappings/mappings";
 
 class PowderAndScatha extends Feature {
     constructor() {

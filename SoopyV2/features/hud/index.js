@@ -275,7 +275,12 @@ class Hud extends Feature {
                 requires(this.showThunderingTimer));
         this.hudElements.push(this.thunderTimerElement);
 
-        this.showRain = new ToggleSetting("Spider den RAIN timer", "", false, "spider_rain_timer", this).requires(this.showThunderingTimer);
+        this.showRainTimer = new ToggleSetting("Spider den RAIN timer", "", false, "spider_rain_timer", this);
+        this.rainTimerElement = new HudTextElement().
+            setToggleSetting(this.showRainTimer).
+            setLocationSetting(new LocationSetting("Rain timer element", "Allows you to edit the location of the rain timer", "rain_timer_elmement", this, [10, 90, 1, 1]).
+                requires(this.showRainTimer));
+        this.hudElements.push(this.rainTimerElement);
 
         this.ppsCounter = new ToggleSetting("Packets/second", "debug not really usefull", false, "pps_counter", this);
         this.ppsCounterElement = new HudTextElement().
@@ -643,24 +648,17 @@ class Hud extends Feature {
 
         if (this.showThunderingTimer.getValue()) {
             let time = rainTimer();
-
             let text = "&6Thunder&7> &7";
-            if (time.isThundering) {
-                text += "&aNOW &7(&f" + formatTime(time.thunderstorm) + "&7)";
-            } else {
-                text += "in &f" + formatTime(time.thunderstorm);
-            }
-
-            if (this.showRain.getValue()) {
-                text += "\n&6Rain&7> &7";
-                if (time.isRaining) {
-                    text += "&aNOW &7(&f" + formatTime(time.rain) + "&7)";
-                } else {
-                    text += "in &f" + formatTime(time.rain);
-                }
-            }
-
+            if (time.isThundering) text += "&aNOW &7(&f" + formatTime(time.thunderstorm) + "&7)";
+            else text += "in &f" + formatTime(time.thunderstorm);
             this.thunderTimerElement.setText(text);
+        }
+        if (this.showRainTimer.getValue()) {
+            let time = rainTimer();
+            let text = "&6Rain&7> &7";
+            if (time.isRaining) text += "&aNOW &7(&f" + formatTime(time.rain) + "&7)";
+            else text += "in &f" + formatTime(time.rain);
+            this.rainTimerElement.setText(text);
         }
 
         if (Player.getPlayer()["func_110139_bj"]() > this.lastAbsorbtion) {
@@ -1004,12 +1002,9 @@ class Hud extends Feature {
     }
 }
 
-
 module.exports = {
     class: new Hud
 };
-
-
 
 const rainingTime = 1200 * 1000;
 const rainInterval = 3600 * 1000;
@@ -1018,11 +1013,8 @@ const PrevThunderstormTime = 1695495301000;
 
 function rainTimer() {
     let timeSinceThunderStart = (Date.now() - PrevThunderstormTime) % thunderstormInterval;
-
     let timeTillThunder = thunderstormInterval - timeSinceThunderStart;
-
     let nextRain = timeTillThunder % rainInterval;
-
     let isRaining = nextRain < rainingTime;
     let isThundering = timeTillThunder < rainingTime;
 

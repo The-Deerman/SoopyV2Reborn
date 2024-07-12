@@ -327,7 +327,7 @@ class Hud extends Feature {
 
         this.registerEvent("renderOverlay", this.renderHud).registeredWhen(() => this.showSpotifyPlaying.getValue() || this.witherImpactCooldownSetting.getValue());
         this.registerStep(true, 5, this.step);
-        this.registerStep(true, 3, this.scan_pets).registeredWhen(() => this.scanGuiForPet.getValue());
+        this.registerStep(true, 2, this.scan_pets).registeredWhen(() => this.scanGuiForPet.getValue());
         this.registerStep(false, 5, this.step_5second);
         this.registerEvent("renderWorld", this.renderWorld).registeredWhen(() => this.fpsEnabledSetting.getValue() && this.fpsFastSetting.getValue());
         this.registerEvent("worldLoad", this.worldLoad);
@@ -681,9 +681,9 @@ class Hud extends Feature {
                 let itemName = item?.getName();
                 if (itemName?.includes("[Lvl ") && Date.now() - this.lastSwappedPet > 1000) {
                     getLore(item)?.forEach((line) => {
-                        if (!line.includes("Click to despawn!")) {
+                        if (line.includes("Click to despawn!")) {
                             this.petText = `&6Pet&7> &7${itemName.split("(")[0]}`;
-                            this.petElement.setText(`&6Pet&7> &7${petText}`);
+                            this.petElement.setText(this.petText);
                         }
                     });                 
                 }
@@ -989,7 +989,6 @@ class Hud extends Feature {
             "LEGENDARY": "&6",
             "MYTHIC": "&d"
         };
-
 
         this.petText = "&6Pet&7> &7[Lvl " + (pet.level.level || "??") + "] " + petTierColor[pet.tier] + pet.name;
         this.petElement.setText(this.petText);

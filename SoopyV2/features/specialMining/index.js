@@ -49,6 +49,10 @@ class PowderAndScatha extends Feature {
         this.showFlawlessGemstone = new ToggleSetting("Gemstone Messages Hider Show Flawless", "should the hider ^ ignore flawless gemstones?", false, "gemstone_show_flawless", this).requires(this.hideGemstoneMessage)
         this.hideWishingCompassMessage = new ToggleSetting("Wishing Compass Message Hider", "like: &r&aYou received &r&f1 &r&aWishing Compass&r&a.&r", false, "compass_message_hider", this).requires(this.PowderElement)
         this.hideAscensionRope = new ToggleSetting("Ascension Rope Hider", "like: &r&aYou received &r&f1 &r&9Ascension Rope&r&a.&r", false, "ascension_rope_hider", this).requires(this.PowderElement)
+        this.hideChestLockpicked = new ToggleSetting("Chest Lockpicked Hider", "like: &r  &r&6&lCHEST LOCKPICKED &r", false, "chest_lockpicked_hider", this).requires(this.PowderElement)
+        this.hideRewards = new ToggleSetting("Rewards Hider", "like: &r  &r&a&lREWARDS&r", false, "rewards_message_hider", this).requires(this.PowderElement)
+        this.hideEmptyLine = new ToggleSetting("Empty line Hider", "like: &r                        ", false, "empty_line_hider", this).requires(this.PowderElement)
+        this.hideSeperatorLines = new ToggleSetting("Seperator lines Hider", "like: &r&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬&r", false, "seperator_lines_hider", this).requires(this.PowderElement)
         this.showAreaTreasure = new ToggleSetting("Show Area Treasure", "whether or not to show each sub zone's treasures from chests", false, "show_area_treasure", this).requires(this.PowderElement)
         this.useGlobalSludgeJuiceDrop = new ToggleSetting("Globalized Sludge Juice Counter", "include sludge juice from all sources into the counter", false, "global_sludge_juice_drop", this).requires(this.PowderElement)
 
@@ -148,6 +152,25 @@ class PowderAndScatha extends Feature {
                 }
             }
         })
+        this.openedChest = false;
+        this.registerChat(/&r  &r&6&lCHEST LOCKPICKED &r|&r  &r&5&lLOOT CHEST COLLECTED &r/, (event) => {
+            if (!this.inCrystalHollows()) return;
+            this.openedChest = true;
+            if (this.hideChestLockpicked.getValue()) cancel(event);
+        })
+        this.registerChat(/&r  &r&[a,f]&lREWARDS&r/, (event) => {
+            if (!this.inCrystalHollows()) return;
+            if (this.hideRewards.getValue()) cancel(event);
+        })
+        this.registerChat("&r", (event) => {
+            if (!this.inCrystalHollows()) return;
+            if (this.hideRewards.getValue() && this.openedChest) cancel(event);
+            this.openedChest = false;
+        })
+        this.registerChat(/&r&[e,d]&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬&r/, (event) => {
+            if (!this.inCrystalHollows()) return;
+            if (this.hideSeperatorLines.getValue()) cancel(event);
+        })
 
         this.dPowder = 0;
         this.sL = Renderer.getStringWidth(" ")
@@ -231,7 +254,7 @@ class PowderAndScatha extends Feature {
                 this.dPowder = Date.now() + 15 * 1000 * 60
             } else this.dPowder = 0
         })
-        this.registerChat("&r  &r&${*}&lCHEST LOCKPICKED &r", (e) => {
+        this.registerChat(/&r  &r&6&lCHEST LOCKPICKED &r|&r  &r&5&lLOOT CHEST COLLECTED &r/, (e) => {
             this.miningData.powder.chests++
             delay(100, () => {
                 this.expRateInfo.push([Date.now(), this.miningData.powder.mithril, this.miningData.powder.gemstone, this.miningData.essence.gold, this.miningData.essence.diamond, this.miningData.powder.chests])
@@ -574,12 +597,12 @@ class PowderAndScatha extends Feature {
                 let m = this.lastPowderReceived.mithril
                 let g = this.lastPowderReceived.gemstone
                 let msg = ""
-                if (g > 0) msg += `&r&aYou received &r&b+${numberWithCommas(g)} &r&dGemstone&r `
+                if (g > 0) msg += `&r&aYou received &r&d${numberWithCommas(g)} Gemstone `
                 if (m > 0) {
-                    if (!msg) msg += `&r&aYou received &r&b+${numberWithCommas(m)} &r&2Mithril&r `
-                    else msg += `and &r&b+${numberWithCommas(m)} &r&2Mithril&r `
+                    if (!msg) msg += `&r&aYou received &r&2${numberWithCommas(m)} Mithril `
+                    else msg += `&r&aand &r&2${numberWithCommas(m)} Mithril `
                 }
-                msg += `Powder&r.`
+                msg += `&r&aPowder&r.`
                 if (this.fixChatForDoublePowder.getValue() && this.dPowder) {
                     let suffix = this.fixChatForDoublePowderSuffix.getValue()
                     ChatLib.chat(`${msg} ${suffix}`)
@@ -597,12 +620,12 @@ class PowderAndScatha extends Feature {
                 let g = this.lastEssenceReceived.gold
                 let d = this.lastEssenceReceived.diamond
                 let msg = ""
-                if (g > 0) msg += `&r&aYou received &r&d+${numberWithCommas(g)} &r&6Gold&r `
+                if (g > 0) msg += `&r&aYou received &r&6${numberWithCommas(g)} Gold `
                 if (d > 0) {
-                    if (!msg) msg += `&r&aYou received &r&d+${numberWithCommas(d)} &r&bDiamond&r `
-                    else msg += `and &r&b+${numberWithCommas(d)} &r&2Mithril&r `
+                    if (!msg) msg += `&r&aYou received &r&b${numberWithCommas(d)} Diamond `
+                    else msg += `&r&aand &r&b${numberWithCommas(d)} Diamond `
                 }
-                msg += `&dEssence&r.`
+                msg += `&r&dEssence&r.`
                 ChatLib.chat(msg)
                 this.lastEssenceReceived = { gold: 0, diamond: 0 }
                 this.lastEssenceReceivedExecuted = false

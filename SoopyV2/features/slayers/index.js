@@ -546,14 +546,15 @@ class Slayers extends Feature {
                 drawFilledBox(loc[0] + 0.5, loc[1], loc[2] + 0.5, 1.01, 1.01, 0, 0, 1, 1, true);
             });
         }
+        if (this.emanEyeThings.getValue()) {
+            this.eyeE.forEach((e) => {
+                let x = e.getX() + (e.getX() - e.getLastX()) * ticks;
+                let y = e.getY() + (e.getY() - e.getLastY()) * ticks;
+                let z = e.getZ() + (e.getZ() - e.getLastZ()) * ticks;
 
-        this.eyeE.forEach((e) => {
-            let x = e.getX() + (e.getX() - e.getLastX()) * ticks;
-            let y = e.getY() + (e.getY() - e.getLastY()) * ticks;
-            let z = e.getZ() + (e.getZ() - e.getLastZ()) * ticks;
-
-            drawBoxAtBlock(x - 0.5, y + 0.7, z - 0.5, 255, 0, 0);
-        });
+                drawBoxAtBlock(x - 0.5, y + 0.7, z - 0.5, 255, 0, 0);
+            });
+        }
         if (this.otherSlayerWaypoints.getValue()) {
             Object.keys(this.slayerLocationDataH).forEach((key) => {
                 drawCoolWaypoint(this.slayerLocationDataH[key][0][0], this.slayerLocationDataH[key][0][1], this.slayerLocationDataH[key][0][2], 255, 0, 0, { name: key + "'s boss" });
@@ -662,19 +663,21 @@ class Slayers extends Feature {
                             this.beaconE.push(e);
                         }
                     }
-                    if (e["func_71124_b"](4)["func_82833_r"]().startsWith("\xA7a")) {
+                    if (this.emanEyeThings.getValue() && e["func_71124_b"](4)["func_82833_r"]().startsWith("\xA7a")) {
                         let closestEIsGaming = false;
                         let closestDist = Infinity;
+			let distance = Infinity;
                         World.getAllEntitiesOfType(net.minecraft.entity.item.EntityArmorStand).forEach((e2) => {
                             if (e2.getName().includes("Voidgloom Seraph")) {
-                                if ((e2.getX() - e["field_70165_t"]) ** 2 + (e2.getY() - e["field_70163_u"]) ** 2 + (e2.getZ() - e["field_70161_v"]) ** 2 < closestDist) {
-                                    closestDist = (e2.getX() - e["field_70165_t"]) ** 2 + (e2.getY() - e["field_70163_u"]) ** 2 + (e2.getZ() - e["field_70161_v"]) ** 2;
+				distance = (e2.getX() - e["field_70165_t"]) ** 2 + (e2.getY() - e["field_70163_u"]) ** 2 + (e2.getZ() - e["field_70161_v"]) ** 2;
+                                if (distance < closestDist) {
+                                    closestDist = distance;
                                     closestEIsGaming = this.emanBoss ? e2.getUUID().toString() === this.emanBoss.getUUID().toString() : false;
                                 }
                             }
                         });
 
-                        if (closestEIsGaming && closestDist < 100 && new Item(e["func_71124_b"](4)).getNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").getRawNBT()["func_150295_c"]("textures", 10)["func_150305_b"](0)["func_74779_i"]("Value") === "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWIwNzU5NGUyZGYyNzM5MjFhNzdjMTAxZDBiZmRmYTExMTVhYmVkNWI5YjIwMjllYjQ5NmNlYmE5YmRiYjRiMyJ9fX0=") {
+                        if (closestEIsGaming && closestDist < 400 && new Item(e["func_71124_b"](4)).getNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").getRawNBT()["func_150295_c"]("textures", 10)["func_150305_b"](0)["func_74779_i"]("Value") === "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWIwNzU5NGUyZGYyNzM5MjFhNzdjMTAxZDBiZmRmYTExMTVhYmVkNWI5YjIwMjllYjQ5NmNlYmE5YmRiYjRiMyJ9fX0=") {
                             this.eyeE.push(new Entity(e));
                         }
 

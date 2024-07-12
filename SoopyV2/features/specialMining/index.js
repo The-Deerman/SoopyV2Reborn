@@ -39,6 +39,7 @@ class PowderAndScatha extends Feature {
         new SettingBase("/resetpowderdata", "to reset powder mining data", undefined, "reset_powder_data_command_info", this).requires(this.PowderElement);
         this.powderPerHour = new ToggleSetting("Mithril & Gemstone Powder/h", "should it show powder per hour on hud?", false, "powder_per_hour_toggle", this).requires(this.PowderElement);
         this.chestsPerHour = new ToggleSetting("Chests/h", "should it show chests per hour on hud?", false, "chests_per_hour_toggle", this).requires(this.PowderElement);
+        this.essencePerHour = new ToggleSetting("Gold & Diamond Essence/h", "should it show essence per hour on hud?", false, "essence_per_hour_toggle", this).requires(this.PowderElement);
         this.resetPowderWhenLeaveCH = new ToggleSetting("Reset Powder When Left CH", "Should it reset powder hud whenever you left ch", false, "reset_powder_when_left_ch", this).requires(this.PowderElement);
         this.resetPowderWhenLeaveGame = new ToggleSetting("Reset Powder When Left Game", "Should it reset powder hud whenever you left game", false, "reset_powder_when_left_game", this).requires(this.PowderElement);
         this.chestUncoverAlert = new ToggleSetting("Alert When You Dug a Chest Out", "so you don't miss it", false, "chest_uncover_alert", this).requires(this.PowderElement);
@@ -82,7 +83,7 @@ class PowderAndScatha extends Feature {
         }
         
         this.registerChat("&r    &r${thing}&r", (thing, e) => {
-	    if (!this.inCrystalHollows()) return;
+            if (!this.inCrystalHollows()) return;
             if (this.hideGemstoneMessage.getValue() && thing.includes("Gemstone") && !thing.includes("Powder") && (this.showFlawlessGemstone.getValue() ? !thing.includes("Flawless") : true)) {
                 cancel(e)
                 if (thing.includes("Amethyst")) this.tempLocation = "Jungle"
@@ -268,7 +269,7 @@ class PowderAndScatha extends Feature {
                 this.compactPowderChat();
             }
         })
-        
+
         this.lastEssenceReceived = {gold: 0, diamond: 0 }
         this.lastEssenceReceivedExecuted = false;
         this.registerChat("&r    &r&dGold Essence${amount}", (amount, e) => {
@@ -488,6 +489,28 @@ class PowderAndScatha extends Feature {
                     this.overlayRight.push(`&d${numberWithCommas(Math.round(this.gemstoneRate * 1000 * 60 * 60))}`)
                 }
             }
+            if (this.miningData.essence.gold) {
+                let m = this.miningData.essence.gold
+
+                this.overlayLeft.push(`&bGold:`)
+                this.overlayRight.push(`&d${numberWithCommas(m)}`)
+            }
+            if (this.miningData.essence.diamond) {
+                let g = this.miningData.essence.diamond
+
+                this.overlayLeft.push(`&bDiamond:`)
+                this.overlayRight.push(`&d${numberWithCommas(g)}`)
+            }
+            if (this.essencePerHour.getValue()) {
+                if (this.goldEssenceRate) {
+                    this.overlayLeft.push(`&bGold/h:`)
+                    this.overlayRight.push(`&d${numberWithCommas(Math.round(this.goldEssenceRate * 1000 * 60 * 60))}`)
+                }
+                if (this.diamondEssenceRate) {
+                    this.overlayLeft.push(`&bDiamond/h:`)
+                    this.overlayRight.push(`&d${numberWithCommas(Math.round(this.diamondEssenceRate * 1000 * 60 * 60))}`)
+                }
+            }
             if (this.chestRate && this.chestsPerHour.getValue()) {
                 this.overlayLeft.push(`&bChests/h:`)
                 this.overlayRight.push(`&d${numberWithCommas(Math.round(this.chestRate * 1000 * 60 * 60))}`)
@@ -511,7 +534,6 @@ class PowderAndScatha extends Feature {
                 }
             }
         }
-
 
         this.overlayLeft2 = []
         this.overlayRight2 = []

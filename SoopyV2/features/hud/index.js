@@ -346,8 +346,7 @@ class Hud extends Feature {
             this.lastSwappedPet = Date.now();
         });
         this.registerChat("&r&aYou summoned your &r${pet}&r&a!&r", (pet) => {
-            pet = pet.replace(/&r/g, "").replace(/&/g, "\xA7");
-            this.petText = "&6Pet&7> " + (this.spawnedPet.includes(pet) ? this.spawnedPet : pet);
+            this.petText = "&6Pet&7> " + this.spawnedPet;
             this.petElement.setText(this.petText);
             this.lastSwappedPet = Date.now();
         });

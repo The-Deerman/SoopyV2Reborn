@@ -358,11 +358,11 @@ class Hud extends Feature {
         });
         this.registerChat("&r&aYour &r${pet} &r&aleveled up to level &r&9${level}&r&a!&r", (pet, level) => {
             if (ChatLib.removeFormatting(this.petText.split("] ")[1].trim()) === ChatLib.removeFormatting(pet.trim())) {
-                const levelMatch = this.petElement.getText().match(/Lvl (\d+)/);
+                const levelMatch = this.petElement.getText()[0].match(/Lvl (\d+)/);
                 const currentLevel = levelMatch ? parseInt(levelMatch[1]) : 0;
                 const newLevel = Number.isNaN(parseInt(level)) ? 0 : parseInt(level);
                 if (newLevel <= currentLevel) return;
-                this.petText = this.petElement.getText().replace(/Lvl \d+/, `Lvl ${level}`);
+                this.petText = this.petElement.getText()[0].replace(/Lvl \d+/, `Lvl ${level}`);
                 this.petElement.setText(this.petText);
                 this.lastSwappedPet = Date.now();
             }

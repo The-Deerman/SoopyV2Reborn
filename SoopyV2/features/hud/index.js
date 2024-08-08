@@ -677,12 +677,14 @@ class Hud extends Feature {
             for (let item of inv) {
                 let itemName = item?.getName();
                 if (itemName?.includes("[Lvl ") && Date.now() - this.lastSwappedPet > 1000) {
-                    getLore(item)?.forEach((line) => {
+		    let lore = getLore(item);
+                    for (let line of lore) {
                         if (line.includes("Click to despawn!")) {
                             this.petText = `&6Pet&7> &7${itemName.split("(")[0]}`;
                             this.petElement.setText(this.petText);
+			    return;
                         }
-                    });                 
+                    }                 
                 }
             }
         }

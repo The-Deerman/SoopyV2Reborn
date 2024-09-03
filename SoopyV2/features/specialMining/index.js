@@ -166,11 +166,11 @@ class PowderAndScatha extends Feature {
         this.registerChat("&r", (event) => {
             if (!this.inCrystalHollows()) return;
             if (this.hideRewards.getValue() && this.openedChest) cancel(event);
-            this.openedChest = false;
         })
         this.registerChat(/&r&[e,d]&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬&r/, (event) => {
             if (!this.inCrystalHollows()) return;
             if (this.hideSeperatorLines.getValue()) cancel(event);
+            this.openedChest = false;
         })
 
         this.dPowder = 0;

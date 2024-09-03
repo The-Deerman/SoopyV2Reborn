@@ -3,9 +3,9 @@
   "creator": "Soopyboo32",
   "author": "Soopyboo32",
   "entry": "index.js",
-  "description": "SoopyV2",
+  "description": "/SoopyV2",
   "name": "SoopyV2",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "versionId": 329,
   "requires": [
     "soopyApis",

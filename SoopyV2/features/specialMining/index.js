@@ -407,6 +407,7 @@ class PowderAndScatha extends Feature {
     resetMiningData(type) {
         if (type === "powder") {
             Object.keys(this.miningData.powder).forEach(thing => this.miningData.powder[thing] = 0)
+            Object.keys(this.miningData.essence).forEach(thing => this.miningData.powder[thing] = 0)
             this.expRateInfo = []
             this.tempLocation = undefined
             this.tempLoot = { global: {}, Jungle: {}, Goblin_Holdout: {}, Precursor_Remnants: {}, Mithril_Deposits: {} }

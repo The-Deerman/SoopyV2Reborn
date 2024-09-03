@@ -87,6 +87,7 @@ class PowderAndScatha extends Feature {
         
         this.registerChat("&r    &r${thing}&r", (thing, e) => {
             if (!this.inCrystalHollows()) return;
+            if (!this.openedChest) return;
             if (this.hideGemstoneMessage.getValue() && thing.includes("Gemstone") && !thing.includes("Powder") && (this.showFlawlessGemstone.getValue() ? !thing.includes("Flawless") : true)) {
                 cancel(e)
                 if (thing.includes("Amethyst")) this.tempLocation = "Jungle"

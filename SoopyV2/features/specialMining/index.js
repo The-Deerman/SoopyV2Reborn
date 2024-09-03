@@ -38,6 +38,7 @@ class PowderAndScatha extends Feature {
         new SettingBase("/resetpowderdata", "to reset powder mining data", undefined, "reset_powder_data_command_info", this).requires(this.PowderElement);
         this.powderPerHour = new ToggleSetting("Mithril & Gemstone Powder/h", "should it show powder per hour on hud?", false, "powder_per_hour_toggle", this).requires(this.PowderElement);
         this.chestsPerHour = new ToggleSetting("Chests/h", "should it show chests per hour on hud?", false, "chests_per_hour_toggle", this).requires(this.PowderElement);
+        this.essence = new ToggleSetting("Gold & Diamond Essence", "should it show essence on hud?", false, "essence_toggle", this).requires(this.PowderElement);
         this.essencePerHour = new ToggleSetting("Gold & Diamond Essence/h", "should it show essence per hour on hud?", false, "essence_per_hour_toggle", this).requires(this.PowderElement);
         this.resetPowderWhenLeaveCH = new ToggleSetting("Reset Powder When Left CH", "Should it reset powder hud whenever you left ch", false, "reset_powder_when_left_ch", this).requires(this.PowderElement);
         this.resetPowderWhenLeaveGame = new ToggleSetting("Reset Powder When Left Game", "Should it reset powder hud whenever you left game", false, "reset_powder_when_left_game", this).requires(this.PowderElement);
@@ -512,17 +513,17 @@ class PowderAndScatha extends Feature {
                     this.overlayRight.push(`&d${numberWithCommas(Math.round(this.gemstoneRate * 1000 * 60 * 60))}`)
                 }
             }
-            if (this.miningData.essence.gold) {
-                let m = this.miningData.essence.gold
-
-                this.overlayLeft.push(`&bGold:`)
-                this.overlayRight.push(`&d${numberWithCommas(m)}`)
-            }
-            if (this.miningData.essence.diamond) {
-                let g = this.miningData.essence.diamond
-
-                this.overlayLeft.push(`&bDiamond:`)
-                this.overlayRight.push(`&d${numberWithCommas(g)}`)
+            if (this.essence.getValue()) {
+                if (this.miningData.essence.gold) {
+                    let m = this.miningData.essence.gold
+                    this.overlayLeft.push(`&bGold:`)
+                    this.overlayRight.push(`&d${numberWithCommas(m)}`)
+                }
+                if (this.miningData.essence.diamond) {
+                    let g = this.miningData.essence.diamond
+                    this.overlayLeft.push(`&bDiamond:`)
+                    this.overlayRight.push(`&d${numberWithCommas(g)}`)
+                }
             }
             if (this.essencePerHour.getValue()) {
                 if (this.goldEssenceRate) {

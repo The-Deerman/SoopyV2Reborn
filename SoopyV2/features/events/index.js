@@ -393,7 +393,8 @@ class Events extends Feature {
         slots.forEach((a) => {
             item = Player.getInventory().getStackInSlot(a);
             if (!item) return;
-            if (ChatLib.removeFormatting(item.getName()) === "Ancestral Spade") {
+            let itemName = ChatLib.removeFormatting(item.getName());
+            if (itemName === "Ancestral Spade" || itemName === "Archaic Spade" || itemName === "Deific Spade" ||) {
                 hasDianaShovle = true;
             }
         });

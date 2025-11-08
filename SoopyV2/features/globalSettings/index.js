@@ -26,6 +26,11 @@ const JavaLong = Java.type("java.lang.Long");
 
 let hecatombLevels = [2, 5, 10, 20, 30, 40, 60, 80, 100];
 let championLevels = [50000, 100000, 250000, 500000, 1000000, 1500000, 2000000, 2500000, 3000000];
+let bottleTypes = {
+    "Empty Thunder Bottle": 50000,
+    "Empty Storm Bottle": 500000,
+    "Empty Hurricane Bottle": 5000000,
+};
 
 class GlobalSettings extends Feature {
     constructor() {
@@ -467,9 +472,12 @@ class GlobalSettings extends Feature {
                     }
                 }
                 if (thunder) {
-                    if (ItemName.removeFormatting().includes("Empty Thunder Bottle")) {
+                    let cleanItemName = ItemName.removeFormatting();
+                    let maxCharges = bottleTypes[cleanItemName];
+
+                    if (maxCharges) {
                         let charges = i?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getDouble("thunder_charge");
-                        thunderText.push(`&6Thunder Charge&7> &f${numberWithCommas(charges)}&7/&750,000`);
+                        thunderText.push(`&6Thunder Charge&7> &f${numberWithCommas(charges)}&7/&7${numberWithCommas(maxCharges)}`);
                     }
                 }
             }

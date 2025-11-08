@@ -394,7 +394,7 @@ class Events extends Feature {
             item = Player.getInventory().getStackInSlot(a);
             if (!item) return;
             let itemName = ChatLib.removeFormatting(item.getName());
-            if (itemName === "Ancestral Spade" || itemName === "Archaic Spade" || itemName === "Deific Spade" ||) {
+            if (itemName === "Ancestral Spade" || itemName === "Archaic Spade" || itemName === "Deific Spade") {
                 hasDianaShovle = true;
             }
         });
